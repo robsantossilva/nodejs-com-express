@@ -1,0 +1,31 @@
+version: '3'
+
+services: 
+  app:
+    build: 
+      context: ./.docker/app
+    volumes:
+      - ./:/home/app
+    ports: 
+      - "3000:3000"
+    depends_on: 
+      - db
+    networks:
+      - net_app
+
+  db:
+    build:
+      context: ./.docker/db
+    volumes:
+      - ./.docker/db/data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=nodejs_com_express
+    ports:
+      - "3306:3306"
+    networks:
+      - net_app
+
+networks:
+  net_app:
+    driver: bridge
