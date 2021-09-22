@@ -1,7 +1,15 @@
-const express = require('express');
+const customExpress = require('./config/customExpress');
+const conexao = require('./infraestrutura/database/conexao');
+const Tabelas = require('./infraestrutura/database/tabelas');
 
-const app = express();
+conexao.connect((erro)=>{
+    if(erro){
+        console.log(erro);
+    }else{
+        console.log('Successfully connect');
 
-app.use("/", (req, res)=>{res.send("olá")})
-
-app.listen(3000, () => console.log('Server is running in 3000'))
+        Tabelas.init(conexao);
+        const app = customExpress();
+        app.listen(3000, () => console.log('Server is running in 3000'));
+    }    
+});
